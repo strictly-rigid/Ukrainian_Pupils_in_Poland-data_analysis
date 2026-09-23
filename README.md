@@ -1,6 +1,3 @@
-# Ukrainian_Pupils_in_Poland-data_analysis
-Interactive dashboard and data analysis of Ukrainian pupil enrollment in Polish schools (2022–2026).
-
 # Time-Series Analysis of Ukrainian Pupil Enrollment in the Polish Education System (2022–2026)
 
 ## Overview & Architecture
@@ -29,15 +26,20 @@ To process over 228,000 records across 19 snapshot dates (2 to 3-month intervals
 * **Initial Surge & Plateau (2022–2024):** Following the full-scale invasion on February 24, 2022, enrollments surged from 147,340 in March 2022 to 191,733 by April 2022. Over the subsequent two school years, enrollment stabilized within an operational plateau of ~178,000–182,000 pupils.
 * **Policy Mandate & Peak (Autumn 2024 – 2026):** The September 2024 legislative reform conditioning the *800+* child allowance on verified attendance in the Polish school system triggered a secondary influx, lifting counts from 178,365 (July 2024) to 193,159 (September 2024). Enrollment peaked at 196,577 in December 2025 before settling at 188,808 by June 2026.
 
+![Total Number of Ukrainian Pupils - Longitudinal](images/total_number_longitudinal_trend.png)
+
 ### 2. Educational Stage Breakdown (June 2026 Snapshot, N = 188,808)
 * **Primary School (*Szkoła podstawowa*):** 58.3% (110,143 pupils) — forms the primary cohort.
 * **Upper Secondary (*Szkoła ponadpodstawowa*):** 23.0% (43,366 pupils).
 * **Preschool (*Wychowanie przedszkolne*):** 16.3% (30,761 pupils).
 * **Post-Secondary & Adult Education:** 2.4% (4,538 pupils combined across *Szkoła policealna* and *Edukacja dorosłych*).
 
+![Enrollment by Educationl Level](images/enrollment_by_educational_level.png)
+
 ### 3. School Sector Dynamics
 * **Public Dominance:** 86.3% (163,014 pupils) are educated in public municipal schools.
 * **Non-Public Sector:** 13.7% (25,794 pupils) attend non-public and civic institutions, heavily concentrated in primary metropolitan centers (Warszawa, Wrocław, Kraków, Łódź, Bydgoszcz, and Poznań).
+* **Preparatory Class Transition (*Oddziały przygotowawcze*):** After peaking in 2022 during the initial crisis response, enrollment in dedicated preparatory classes steadily reduced to ~1.3% by 2026, marking a broad systemic transition of displaced pupils into mainstream Polish classrooms.
 
 ### 4. Territorial Distribution
 Over 60.4% of all enrolled Ukrainian pupils reside within just 5 voivodeships:
@@ -49,6 +51,16 @@ Over 60.4% of all enrolled Ukrainian pupils reside within just 5 voivodeships:
 
 Eastern border regions (e.g., Podlaskie at 2,561 pupils and Podkarpackie at 4,565) show significantly lower absorption, reflecting internal onward migration toward Poland's primary metropolitan housing and labor markets.
 
+<p align="center">
+  <img src="images/geographic_distribution_of_pupils.png" alt="Territorial distribution of Ukrainian pupils by Voivodeship" width="750">
+  <br>
+  <sub><em>Figure 1: Territorial distribution of Ukrainian pupils by Voivodeship (June 2026 snapshot; source: SIO).</em></sub>
+</p>
+
+## SUMMARY
+
+In conclusion, the longitudinal analysis demonstrates sustained structural stability in the numbers and proportions of Ukrainian pupils in Poland. Enrollment has consolidated predominantly within the public municipal school networks—with over 86% attending public schools—and remains heavily concentrated in Poland's primary metropolitan hubs, where primary school-age children consistently form the vast majority of the cohort. 
+
 ---
 
 ## Technical & Dashboard Architecture
@@ -57,7 +69,7 @@ Eastern border regions (e.g., Podlaskie at 2,561 pupils and Podkarpackie at 4,56
 [Raw SIO Snapshots (228k+ records)]
         |
         v
-[Power Pivot Data Model (DAX)] ---> [Slicers: Voivodeship / Sector / Date]
+[Power Pivot Data Model (DAX)] ---> [Slicers: Voivodeship / Sector / Educational level / Date]
         |
         v
 [Calc_Tables Staging]
@@ -71,3 +83,8 @@ Eastern border regions (e.g., Podlaskie at 2,561 pupils and Podkarpackie at 4,56
   |-- Tier 2: Interactive Slicer Navigation Bar
   |-- Tier 3: National Longitudinal Line Chart & Stage Breakdown Doughnut
   \-- Tier 4: Filled Geographic Map & Top-5 Longitudinal Sparkline Table
+```
+
+![Power Pivot Data Model Schema](images/data_model.png)
+
+<sub>*Figure: Power Pivot Star Schema showing the central fact table (`Uczniowie_uchodzcy...`) linked via a 1-to-many relationship from the dedicated `Calendar` dimension table (`Calendar[Date]` &rarr; `[Reference date]`), accompanied by explicit DAX measures for dynamic metric calculation.*</sub>
